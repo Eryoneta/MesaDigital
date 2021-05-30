@@ -33,16 +33,20 @@ public class MesaDigitalReceptor{
 	private ServerSocket serverImgs;
 	public static void main(String[]vars){new MesaDigitalReceptor();}
 	public MesaDigitalReceptor(){
-		try{JOptionPane.showMessageDialog(null,InetAddress.getLocalHost(),"IP deste transmissor",JOptionPane.INFORMATION_MESSAGE);}catch(HeadlessException|UnknownHostException erro){System.exit(0);}
+		try{
+			JOptionPane.showMessageDialog(null,InetAddress.getLocalHost(),"Transmitter's IP",JOptionPane.INFORMATION_MESSAGE);
+		}catch(HeadlessException|UnknownHostException erro){
+			System.exit(0);
+		}
 		inicio();
 		recebeInputs();
 		enviaImagens();
 		try{
 			SystemTray.getSystemTray().add(new TrayIcon(ImageIO.read(getClass().getResource("Receptor.png")),"Receptor",new PopupMenu(){{
-				add(new MenuItem("Sair"){{addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){System.exit(0);}});}});
+				add(new MenuItem("Exit"){{addActionListener(new ActionListener(){public void actionPerformed(ActionEvent e){System.exit(0);}});}});
 			}}));
 		}catch(AWTException|IOException erro){
-			JOptionPane.showMessageDialog(null,"Erro ao carregar ícone!\n"+erro,"Error",JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null,"Error: Can't load icon!\n"+erro,"Error!",JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
 	}
@@ -65,8 +69,10 @@ public class MesaDigitalReceptor{
 						socket.close();
 					}
 				}catch(IOException|ClassNotFoundException erro){
-					JOptionPane.showMessageDialog(null,"Erro no contato inicial!\n"+erro,"Erro!",JOptionPane.ERROR_MESSAGE);
-					try{serverIni.close();}catch(IOException error){}
+					JOptionPane.showMessageDialog(null,"Error: Can't connect!\n"+erro,"Error!",JOptionPane.ERROR_MESSAGE);
+					try{
+						serverIni.close();
+					}catch(IOException error){}
 					System.exit(0);
 				}
 			}
@@ -78,7 +84,11 @@ public class MesaDigitalReceptor{
 				try{
 					serverInps=new ServerSocket(portInps);
 					Robot Bot=null;
-					try{Bot=new Robot();}catch(AWTException erro){System.exit(0);}
+					try{
+						Bot=new Robot();
+					}catch(AWTException erro){
+						System.exit(0);
+					}
 					Toolkit.getDefaultToolkit().setLockingKeyState(KeyEvent.VK_NUM_LOCK,false);
 					while(true){
 						//INICIA
@@ -86,7 +96,7 @@ public class MesaDigitalReceptor{
 						ObjectInputStream input=new ObjectInputStream(socket.getInputStream());
 						//RECEBE
 						String dados=(String)input.readObject();
-						int tam=(dados.equals("Fechar")?0:dados.length());
+						int tam=(dados.equals("X")?0:dados.length());
 						if(dados.startsWith("MP:")){
 							final int x=Integer.parseInt(dados.substring(3,dados.indexOf(",")));
 							final int y=Integer.parseInt(dados.substring(dados.indexOf(",")+1,tam));
@@ -107,10 +117,10 @@ public class MesaDigitalReceptor{
 						//ENCERRA
 						input.close();
 						socket.close();
-						if(dados.equals("Fechar"))break;
+						if(dados.equals("X"))break;
 					}
 				}catch(IOException|ClassNotFoundException erro){
-					JOptionPane.showMessageDialog(null,"Erro no contato de inputs!\n"+erro,"Erro!",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,"Error: Can't receive images!\n"+erro,"Error!",JOptionPane.ERROR_MESSAGE);
 				}finally{
 					try{
 						serverInps.close();
@@ -127,7 +137,11 @@ public class MesaDigitalReceptor{
 				try{
 					serverImgs=new ServerSocket(portImgs);
 					Robot Bot=null;
-					try{Bot=new Robot();}catch(AWTException erro){System.exit(0);}
+					try{
+						Bot=new Robot();
+					}catch(AWTException erro){
+						System.exit(0);
+					}
 					while(true){
 						//INICIA
 						Socket socket=serverImgs.accept();
@@ -140,8 +154,11 @@ public class MesaDigitalReceptor{
 						socket.close();
 					}
 				}catch(IOException erro){
-					JOptionPane.showMessageDialog(null,"Erro no contato de imagens!\n"+erro,"Erro!",JOptionPane.ERROR_MESSAGE);
-					try{serverInps.close();serverImgs.close();}catch(IOException error){}
+					JOptionPane.showMessageDialog(null,"Error: Can't send images!\n"+erro,"Error!",JOptionPane.ERROR_MESSAGE);
+					try{
+						serverInps.close();
+						serverImgs.close();
+					}catch(IOException error){}
 					System.exit(0);
 				}
 			}

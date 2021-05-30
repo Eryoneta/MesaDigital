@@ -28,7 +28,7 @@ import java.util.List;
 public class FullscreenActivity extends Activity{
     public static DrawingView TELA;
     public static List<enviaInputs>INPUTS=new ArrayList<enviaInputs>();
-    public static String IP="192.168.137.1";
+    public static String IP="192.168.0.1";
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         StrictMode.ThreadPolicy policy=new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -77,7 +77,7 @@ public class FullscreenActivity extends Activity{
     }
     private void showGetIP(){
         AlertDialog.Builder builder=new AlertDialog.Builder(this);
-        builder.setTitle("IP do receptor:");
+        builder.setTitle("Receptor's IP:");
         final EditText input=new EditText(this);
         input.setText(IP);
         builder.setView(input);
@@ -92,7 +92,7 @@ public class FullscreenActivity extends Activity{
                 dialog.cancel();
             }
         });
-        builder.setNegativeButton("Cancelar",new DialogInterface.OnClickListener(){
+        builder.setNegativeButton("Cancel",new DialogInterface.OnClickListener(){
             public void onClick(DialogInterface dialog,int which){
                 dialog.cancel();
                 System.exit(0);
